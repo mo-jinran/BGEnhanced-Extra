@@ -17,6 +17,20 @@ const defaultConfig = {
         filterBlur: 0,
         filterBrightness: 100,
         filterSaturate: 100
+    },
+    windowFocus: {
+        transitionDelay: 300,
+        transformScale: 100,
+        filterBlur: 0,
+        filterBrightness: 100,
+        filterSaturate: 100
+    },
+    windowBlur: {
+        transitionDelay: 300,
+        transformScale: 100,
+        filterBlur: 0,
+        filterBrightness: 100,
+        filterSaturate: 40
     }
 }
 
@@ -135,6 +149,40 @@ plugin.onLoad(async () => {
         backgroundDom.style.setProperty("--filterBrightness", `${filterBrightness}%`);
         backgroundDom.style.setProperty("--filterSaturate", `${filterSaturate}%`);
     });
+
+    // 窗口聚焦
+    window.addEventListener("focus", () => {
+        console.log("窗口聚焦");
+        // 读取配置
+        const transitionDelay = pluginConfig.get("windowFocus")["transitionDelay"];
+        const transformScale = pluginConfig.get("windowFocus")["transformScale"];
+        const filterBlur = pluginConfig.get("windowFocus")["filterBlur"];
+        const filterBrightness = pluginConfig.get("windowFocus")["filterBrightness"];
+        const filterSaturate = pluginConfig.get("windowFocus")["filterSaturate"];
+        // 更改属性
+        backgroundDom.style.setProperty("--transitionDelay", `${transitionDelay}ms`);
+        backgroundDom.style.setProperty("--transformScale", `${transformScale}%`);
+        backgroundDom.style.setProperty("--filterBlur", `${filterBlur}px`);
+        backgroundDom.style.setProperty("--filterBrightness", `${filterBrightness}%`);
+        backgroundDom.style.setProperty("--filterSaturate", `${filterSaturate}%`);
+    });
+
+    // 窗口失焦
+    window.addEventListener("blur", () => {
+        console.log("窗口失焦");
+        // 读取配置
+        const transitionDelay = pluginConfig.get("windowBlur")["transitionDelay"];
+        const transformScale = pluginConfig.get("windowBlur")["transformScale"];
+        const filterBlur = pluginConfig.get("windowBlur")["filterBlur"];
+        const filterBrightness = pluginConfig.get("windowBlur")["filterBrightness"];
+        const filterSaturate = pluginConfig.get("windowBlur")["filterSaturate"];
+        // 更改属性
+        backgroundDom.style.setProperty("--transitionDelay", `${transitionDelay}ms`);
+        backgroundDom.style.setProperty("--transformScale", `${transformScale}%`);
+        backgroundDom.style.setProperty("--filterBlur", `${filterBlur}px`);
+        backgroundDom.style.setProperty("--filterBrightness", `${filterBrightness}%`);
+        backgroundDom.style.setProperty("--filterSaturate", `${filterSaturate}%`);
+    });
 });
 
 
@@ -222,6 +270,80 @@ function initConfigView(configView) {
         filterBlur.value = pluginConfig.get("pointerleave")["filterBlur"];
         filterBrightness.value = pluginConfig.get("pointerleave")["filterBrightness"];
         filterSaturate.value = pluginConfig.get("pointerleave")["filterSaturate"];
+    }
+
+    // 窗口聚焦
+    {
+        // 标题按钮
+        const apply = configView.querySelector(".windowFocus .apply");
+        const reset = configView.querySelector(".windowFocus .reset");
+        // 功能选项
+        const transitionDelay = configView.querySelector(".windowFocus .transitionDelay");
+        const transformScale = configView.querySelector(".windowFocus .transformScale");
+        const filterBlur = configView.querySelector(".windowFocus .filterBlur");
+        const filterBrightness = configView.querySelector(".windowFocus .filterBrightness");
+        const filterSaturate = configView.querySelector(".windowFocus .filterSaturate");
+        // 立即应用
+        apply.addEventListener("click", () => {
+            const config = pluginConfig.get("windowFocus");
+            config["transitionDelay"] = transitionDelay.value;
+            config["transformScale"] = transformScale.value;
+            config["filterBlur"] = filterBlur.value;
+            config["filterBrightness"] = filterBrightness.value;
+            config["filterSaturate"] = filterSaturate.value;
+            pluginConfig.set("windowFocus", config);
+        });
+        // 恢复默认
+        reset.addEventListener("click", () => {
+            transitionDelay.value = defaultConfig["windowFocus"]["transitionDelay"];
+            transformScale.value = defaultConfig["windowFocus"]["transformScale"];
+            filterBlur.value = defaultConfig["windowFocus"]["filterBlur"];
+            filterBrightness.value = defaultConfig["windowFocus"]["filterBrightness"];
+            filterSaturate.value = defaultConfig["windowFocus"]["filterSaturate"];
+            pluginConfig.set("windowFocus", undefined);
+        });
+        transitionDelay.value = pluginConfig.get("windowFocus")["transitionDelay"];
+        transformScale.value = pluginConfig.get("windowFocus")["transformScale"];
+        filterBlur.value = pluginConfig.get("windowFocus")["filterBlur"];
+        filterBrightness.value = pluginConfig.get("windowFocus")["filterBrightness"];
+        filterSaturate.value = pluginConfig.get("windowFocus")["filterSaturate"];
+    }
+
+    // 窗口失焦
+    {
+        // 标题按钮
+        const apply = configView.querySelector(".windowBlur .apply");
+        const reset = configView.querySelector(".windowBlur .reset");
+        // 功能选项
+        const transitionDelay = configView.querySelector(".windowBlur .transitionDelay");
+        const transformScale = configView.querySelector(".windowBlur .transformScale");
+        const filterBlur = configView.querySelector(".windowBlur .filterBlur");
+        const filterBrightness = configView.querySelector(".windowBlur .filterBrightness");
+        const filterSaturate = configView.querySelector(".windowBlur .filterSaturate");
+        // 立即应用
+        apply.addEventListener("click", () => {
+            const config = pluginConfig.get("windowBlur");
+            config["transitionDelay"] = transitionDelay.value;
+            config["transformScale"] = transformScale.value;
+            config["filterBlur"] = filterBlur.value;
+            config["filterBrightness"] = filterBrightness.value;
+            config["filterSaturate"] = filterSaturate.value;
+            pluginConfig.set("windowBlur", config);
+        });
+        // 恢复默认
+        reset.addEventListener("click", () => {
+            transitionDelay.value = defaultConfig["windowBlur"]["transitionDelay"];
+            transformScale.value = defaultConfig["windowBlur"]["transformScale"];
+            filterBlur.value = defaultConfig["windowBlur"]["filterBlur"];
+            filterBrightness.value = defaultConfig["windowBlur"]["filterBrightness"];
+            filterSaturate.value = defaultConfig["windowBlur"]["filterSaturate"];
+            pluginConfig.set("windowBlur", undefined);
+        });
+        transitionDelay.value = pluginConfig.get("windowBlur")["transitionDelay"];
+        transformScale.value = pluginConfig.get("windowBlur")["transformScale"];
+        filterBlur.value = pluginConfig.get("windowBlur")["filterBlur"];
+        filterBrightness.value = pluginConfig.get("windowBlur")["filterBrightness"];
+        filterSaturate.value = pluginConfig.get("windowBlur")["filterSaturate"];
     }
 }
 
