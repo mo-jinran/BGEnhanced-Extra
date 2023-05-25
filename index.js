@@ -5,18 +5,18 @@ const defaultConfig = {
     pointermove: {
         followPointerSwitch: true,
         transitionDelay: 150,
-        transformScale: 1.1,
+        transformScale: 110,
         filterBlur: 0,
-        filterBrightness: 0.8,
-        filterSaturate: 1.0
+        filterBrightness: 80,
+        filterSaturate: 100
     },
     pointerleave: {
         positionResetSwitch: true,
         transitionDelay: 300,
-        transformScale: 1.0,
+        transformScale: 100,
         filterBlur: 0,
-        filterBrightness: 1.0,
-        filterSaturate: 1.0
+        filterBrightness: 100,
+        filterSaturate: 100
     }
 }
 
@@ -58,14 +58,14 @@ function injectCSSStyles() {
             ease-out
         ;
         transform:
-            scale(var(--transformScale, ${pluginConfig.get("pointerleave")["transformScale"]}))
+            scale(var(--transformScale, ${pluginConfig.get("pointerleave")["transformScale"]}%))
             translateX(var(--translateX, 0px))
             translateY(var(--translateY, 0px))
         ;
         filter:
             blur(var(--filterBlur, ${pluginConfig.get("pointerleave")["filterBlur"]}px))
-            brightness(var(--filterBrightness, ${pluginConfig.get("pointerleave")["filterBrightness"]}))
-            saturate(var(--filterSaturate, ${pluginConfig.get("pointerleave")["filterSaturate"]}))
+            brightness(var(--filterBrightness, ${pluginConfig.get("pointerleave")["filterBrightness"]}%))
+            saturate(var(--filterSaturate, ${pluginConfig.get("pointerleave")["filterSaturate"]}%))
         ;
     }`;
     document.head.appendChild(element);
@@ -94,19 +94,19 @@ plugin.onLoad(async () => {
                 const filterSaturate = pluginConfig.get("pointermove")["filterSaturate"];
                 // 更改属性
                 backgroundDom.style.setProperty("--transitionDelay", `${transitionDelay}ms`);
-                backgroundDom.style.setProperty("--transformScale", transformScale);
+                backgroundDom.style.setProperty("--transformScale", `${transformScale}%`);
                 // 跟随指针
                 if (followPointerSwitch) {
                     let translateX = window.innerWidth / 2 - event.clientX;
                     let translateY = window.innerHeight / 2 - event.clientY;
-                    translateX = translateX - translateX / transformScale;
-                    translateY = translateY - translateY / transformScale;
+                    translateX = translateX - translateX / (transformScale / 100);
+                    translateY = translateY - translateY / (transformScale / 100);
                     backgroundDom.style.setProperty("--translateX", `${translateX}px`);
                     backgroundDom.style.setProperty("--translateY", `${translateY}px`);
                 }
                 backgroundDom.style.setProperty("--filterBlur", `${filterBlur}px`);
-                backgroundDom.style.setProperty("--filterBrightness", `${filterBrightness}`);
-                backgroundDom.style.setProperty("--filterSaturate", `${filterSaturate}`);
+                backgroundDom.style.setProperty("--filterBrightness", `${filterBrightness}%`);
+                backgroundDom.style.setProperty("--filterSaturate", `${filterSaturate}%`);
                 animationFrameRequested = false;
             });
         }
@@ -125,15 +125,15 @@ plugin.onLoad(async () => {
         const filterSaturate = pluginConfig.get("pointerleave")["filterSaturate"];
         // 更改属性
         backgroundDom.style.setProperty("--transitionDelay", `${transitionDelay}ms`);
-        backgroundDom.style.setProperty("--transformScale", transformScale);
+        backgroundDom.style.setProperty("--transformScale", `${transformScale}%`);
         // 位置复位
         if (positionResetSwitch) {
             backgroundDom.style.setProperty("--translateX", 0);
             backgroundDom.style.setProperty("--translateY", 0);
         }
         backgroundDom.style.setProperty("--filterBlur", `${filterBlur}px`);
-        backgroundDom.style.setProperty("--filterBrightness", `${filterBrightness}`);
-        backgroundDom.style.setProperty("--filterSaturate", `${filterSaturate}`);
+        backgroundDom.style.setProperty("--filterBrightness", `${filterBrightness}%`);
+        backgroundDom.style.setProperty("--filterSaturate", `${filterSaturate}%`);
     });
 });
 
